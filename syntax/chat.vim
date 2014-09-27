@@ -1,12 +1,12 @@
 " Vim syntax file
-" Language:	CHAT transcription format
+" Language: CHAT transcription format
 " Maintainer: Alex Klapheke <alexklapheke@gmail.com>
 " License: GPL v2
 
 " Don't supersede an already-loaded syntax file
-" if exists("b:current_syntax")
-" 	finish
-" endif
+if exists("b:current_syntax")
+	finish
+endif
 
 syntax case match
 setlocal tabstop=16
@@ -55,5 +55,5 @@ hi def link CHATsep          Comment
 
 hi def link CHATsyntaxerror  Error
 
-" let b:current_syntax = "chat"
+let b:current_syntax = "chat"
 
