@@ -2,33 +2,48 @@
 " Language: CHAT transcription format
 " Maintainer: Alex Klapheke <alexklapheke@gmail.com>
 " License: GPL v2
+" TODO: Implement matchparen-style highlighting for CHATinterrupt brackets
 
 " Don't supersede an already-loaded syntax file
 if exists("b:current_syntax")
 	finish
 endif
 
+" Adopt CHAT-CA Transcription (Sacks, Schegloff, & Jefferson 1974)
+if search('^@Options:\s*\<CA\>', 'n') != 0
+	let chat_ca = 1
+endif
+
 syntax case match
-setlocal tabstop=16
+setlocal tabstop=8
+setlocal noexpandtab
 
 " metadata at top of file
 syntax region CHATatheader    start=/^@/ end=/^[@*%]\@=/ contains=CHATatheadertag,CHATsep,CHATsyntaxerror
 syntax match  CHATatheadertag /^@[^:]\+:\?/              contained
 
 " main transcription data
-syntax region CHATmainline     start=/^\*/ end=/^[@*%]\@=/ transparent contains=CHATmainlinetag,CHATpostcode,CHATtimestam,CHATsyntaxerror
+syntax region CHATmainline     start=/^\*/ end=/^[@*%]\@=/ transparent contains=CHATmainlinetag,CHATpostcode,CHATtimestamp,CHATsyntaxerror,CHATunintelligible,CHATinterrupt,CHATpitchmark
 syntax match  CHATmainlinetag  /^\*\w\+:/                  contained
 syntax match  CHATcommentsdata /\(^%\w\+:\s\+\)\@<=.*/
+
+syn keyword CHATunintelligible xxx
+syn match   CHATunintelligible /\<&\w\+\>/ contained
+
+if exists("chat_ca")
+	syntax match CHATinterrupt /[⌈⌉⌊⌋]/ contained
+	syntax match CHATpitchmark /[§°·āšʔʕʰΫạἩ„‡⁇⁎↑→↓↗↘↻⇗⇘∆∇∞∫∲∾≈≋≡▁▔◉☺]/ contained
+endif
 
 " dependent tier
 syntax match  CHATdepntier     /^%\w\+:/
 syntax match  CHATdepntierdata /\(^%\(pho\|mod\)\+:\s\+\)\@<=.*/
 
 " other things
-syntax match CHATpostcode /\[[^\]]\+\]/          contained
-syntax match CHATtimestam /[·•][0-9_]\+[·•]/ contained contains=CHATtsbullet
-syntax match CHATtsbullet /%\w\+:/               contained
-syntax match CHATsep /|/                         contained
+syntax match CHATpostcode  /\[[^\]]\+\]/          contained
+syntax match CHATtimestamp /[·•][0-9_]\+[·•]/ contained contains=CHATtsbullet
+syntax match CHATtsbullet  /%\w\+:/               contained
+syntax match CHATsep  /|/                         contained
 
 " errors
 syntax match CHATsyntaxerror  /^[^@*% \t].*/
@@ -46,10 +61,13 @@ hi def link CHATdepntier     Function
 " hi def link CHATdepntierdata Function
 " hi def link CHATdepntier     Normal
 " hi def link CHATdepntierdata Normal
-hi def link CHATcommentsdata Comment
+hi def link CHATcommentsdata   Comment
+hi def link CHATunintelligible String
+hi def link CHATinterrupt      Delimiter
+hi def link CHATpitchmark      Tag
 
 hi def link CHATpostcode     Constant
-hi def link CHATtimestam     Type
+hi def link CHATtimestamp    Type
 hi def link CHATtsbullet     Tag
 hi def link CHATsep          Comment
 
