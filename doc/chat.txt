@@ -1,6 +1,47 @@
-*vim-chat.txt*	Syntax file for CHAT transcription format
+*vim-chat.txt*  Syntax file for CHAT transcription format
 
-						*vim-chat-settings*
-This plugin doesn't have any settings.
+Version:    0.1
+Maintainer: Alex Klapheke <alexklapheke@gmail.com>
+License:    GPL v2
 
- vim:tw=78:ts=8:ft=help:norl:
+The current version of this plugin can be found at:
+<http://github.com/klapheke/vim-chat>
+
+===============================================================================
+ABOUT                                                        *vim-chat-about*
+
+This is a vim syntax file for the CHAT transcription format, which is used in
+many spoken language corpora, such as CHILDES, TalkBank, and SBCSAE.
+
+The full specification for the CHAT format can be found at:
+<http://childes.psy.cmu.edu/manuals/chat.pdf>
+
+==============================================================================
+OPTIONS                                                    *vim-chat-options*
+
+                                                                  *'chat_ca'*
+Use the CHAT-CA format, based on the system proposed by Sacks, Schegloff, &
+Jefferson (1974, doi:10.2307/412243). >
+  let chat_ca = 1
+<
+
+==============================================================================
+LICENCE                                                    *vim-chat-licence*
+
+Copyright (C) 2014  Alex Klapheke
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+vim:tw=78:ts=8:ft=help:
