@@ -1,0 +1,6 @@
+*vim-chat.txt*	Syntax file for CHAT transcription format
+
+						*vim-chat-settings*
+This plugin doesn't have any settings.
+
+ vim:tw=78:ts=8:ft=help:norl:

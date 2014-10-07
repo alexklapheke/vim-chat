@@ -2,6 +2,7 @@
 " Language: CHAT transcription format
 " Maintainer: Alex Klapheke <alexklapheke@gmail.com>
 " License: GPL v2
+" Updated: 7 Oct 2014
 " TODO: Implement matchparen-style highlighting for CHATinterrupt brackets
 
 " Don't supersede an already-loaded syntax file
@@ -9,14 +10,7 @@ if exists("b:current_syntax")
 	finish
 endif
 
-" Adopt CHAT-CA Transcription (Sacks, Schegloff, & Jefferson 1974)
-if search('^@Options:\s*\<CA\>', 'n') != 0
-	let chat_ca = 1
-endif
-
 syntax case match
-setlocal tabstop=8
-setlocal noexpandtab
 
 " metadata at top of file
 syntax region CHATatheader    start=/^@/ end=/^[@*%]\@=/ contains=CHATatheadertag,CHATsep,CHATsyntaxerror
