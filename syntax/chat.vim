@@ -40,15 +40,27 @@ syntax match CHATtsbullet  /%\w\+:/               contained
 syntax match CHATsep  /|/                         contained
 
 " errors
-syntax match CHATsyntaxerror  /^[^@*% \t].*/
-syntax match CHATsyntaxerror  /\%^\(@Begin\_$\)\@!\n*.*/
-syntax match CHATsyntaxerror  /.*\n*\(\_^@End\)\@<!\%$/
+syntax match CHATsyntaxerror        /^[^@*% \t].*/
+syntax match CHATsyntaxerror        /\%^\(@Begin\_$\)\@!\n*.*/
+syntax match CHATsyntaxerror        /.*\n*\(\_^@End\)\@<!\%$/
+
+" header lines erroneously inserted within the data
+" this regex is broken: it does not detect header lines after indented lines
+syntax match CHATsyntaxerrorheader  /\%(\_^[*%].*\n\%(\_^\s.*\n\)*\)\@<=\_^@.*\%(\n\%(\_^\s.*\n\)*\_^[*%].*\)\@=/
+
+
+" hidden headers
+syntax match CHAThiddenheader /^@Font:.*$/
+syntax match CHAThiddenheader /^@UTF8$/
+syntax match CHAThiddenheader /^@PID:.*8$/
+syntax match CHAThiddenheader /^@ColorWords:.*$/
 
 
 hi def link CHATatheader     String
 hi def link CHATatheadertag  PreProc
 " hi def link CHATatheader     Comment
 " hi def link CHATatheadertag  Todo
+hi def link CHAThiddenheader Comment
 
 hi def link CHATmainlinetag  Statement
 hi def link CHATdepntier     Function
@@ -66,6 +78,7 @@ hi def link CHATtsbullet     Tag
 hi def link CHATsep          Comment
 
 hi def link CHATsyntaxerror  Error
+hi def link CHATsyntaxerrorheader  Error
 
 let b:current_syntax = "chat"
 
