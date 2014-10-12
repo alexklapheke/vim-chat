@@ -24,7 +24,7 @@ syntax match  CHATcommentsdata /\(^%\w\+:\s\+\)\@<=.*/
 syn keyword CHATunintelligible xxx
 syn match   CHATunintelligible /\<&\w\+\>/ contained
 
-if exists("chat_ca")
+if exists("b:chat_ca")
 	syntax match CHATinterrupt /[⌈⌉⌊⌋]/ contained
 	syntax match CHATpitchmark /[§°·āšʔʕʰΫạἩ„‡⁇⁎↑→↓↗↘↻⇗⇘∆∇∞∫∲∾≈≋≡▁▔◉☺]/ contained
 endif

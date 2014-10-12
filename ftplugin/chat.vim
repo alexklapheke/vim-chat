@@ -6,7 +6,7 @@ setlocal noexpandtab
 
 setlocal comments=n:%
 
-if exists("chat_ca")
+if exists("b:chat_ca")
 	setlocal matchpairs+=⌈:⌉
 	setlocal matchpairs+=⌊:⌋
 endif

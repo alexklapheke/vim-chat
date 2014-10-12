@@ -8,6 +8,6 @@ endif
 
 " Adopt CHAT-CA Transcription (Sacks, Schegloff, & Jefferson 1974)
 if search('^@Options:\s*\<CA\>', 'n') != 0
-	let chat_ca = 1
+	let b:chat_ca = 1
 endif
 
