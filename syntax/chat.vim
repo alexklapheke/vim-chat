@@ -50,10 +50,12 @@ syntax match CHATsyntaxerrorheader  /\%(\_^[*%].*\n\%(\_^\s.*\n\)*\)\@<=\_^@.*\%
 
 
 " hidden headers
-syntax match CHAThiddenheader /^@Font:.*$/
-syntax match CHAThiddenheader /^@UTF8$/
-syntax match CHAThiddenheader /^@PID:.*8$/
-syntax match CHAThiddenheader /^@ColorWords:.*$/
+if b:minchat == 0
+	syntax match CHAThiddenheader /^@Font:.*$/
+	syntax match CHAThiddenheader /^@UTF8$/
+	syntax match CHAThiddenheader /^@PID:.*8$/
+	syntax match CHAThiddenheader /^@ColorWords:.*$/
+endif
 
 
 hi def link CHATatheader     String

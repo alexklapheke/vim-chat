@@ -19,10 +19,15 @@ The full specification for the CHAT format can be found at:
 ==============================================================================
 OPTIONS                                                    *vim-chat-options*
 
-                                                                  *'chat_ca'*
+                                                                *'b:minchat'*
+Use the minCHAT format, a subset of full CHAT (see spec, §4.1--4.2). >
+  let b:minchat = 1
+<
+
+                                                                *'b:chat_ca'*
 Use the CHAT-CA format, based on the system proposed by Sacks, Schegloff, &
 Jefferson (1974, doi:10.2307/412243). >
-  let chat_ca = 1
+  let b:chat_ca = 1
 <
 
 ==============================================================================
