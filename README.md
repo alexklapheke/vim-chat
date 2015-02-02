@@ -8,11 +8,7 @@ This is very much a work in progress, as I slowly work my way through the [spec]
 
 ## Pathogen
 
-Just
-
-```shell
-git clone git://github.com/klapheke/vim-chat.git ~/.vim/bundle/vim-chat/
-```
+Just `git clone git://github.com/klapheke/vim-chat.git ~/.vim/bundle/vim-chat/`
 
 ## Vundle
 
@@ -20,10 +16,10 @@ Add the following to your .vimrc:
 
 ```viml
 " CHAT transcription syntax
-Bundle 'klapheke/vim-chat'
+Plugin 'klapheke/vim-chat'
 ```
 
-## References
+# References
 
 MacWhinney, B. (2000). *The CHILDES Project: Tools for Analyzing Talk*. 3<sup>rd</sup> Edition. Mahwah, NJ: Lawrence Erlbaum Associates
 
