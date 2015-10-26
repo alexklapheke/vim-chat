@@ -11,38 +11,38 @@ if exists("b:current_syntax")
 endif
 
 syntax case match
-
 " metadata at top of file
-syntax region CHATatheader    start=/^@/ end=/^[@*%]\@=/ contains=CHATatheadertag,CHATsep,CHATsyntaxerror
-syntax match  CHATatheadertag /^@[^:]\+:\?/              contained
+syntax region CHATatheader    start=/^@/ end=/^[*%]\@=/ contains=CHATatheadertag,CHATsep,CHATsyntaxerror
+syntax match  CHATatheadertag /^@[^:]\+:\?/             contained
 
 " main transcription data
-syntax region CHATmainline     start=/^\*/ end=/^[@*%]\@=/ transparent contains=CHATmainlinetag,CHATpostcode,CHATtimestamp,CHATsyntaxerror,CHATunintelligible,CHATinterrupt,CHATpitchmark
-syntax match  CHATmainlinetag  /^\*\w\+:/                  contained
-syntax match  CHATcommentsdata /\(^%\w\+:\s\+\)\@<=.*/
+syntax region CHATmainline     start=/^\*/ end=/\%$/ transparent contains=CHATmainlinetag,CHATmainlinedata,CHATpostcode,CHATtimestamp,CHATsyntaxerror,CHATunintelligible,CHATinterrupt,CHATpitchmark
+syntax match  CHATmainlinedata /\%(^\*\w\+:\|^\s\+\)\@<=[^·•]*/      containedin=CHATmainline
+syntax match  CHATmainlinetag  /^\*\w\+:/                              transparent containedin=CHATmainline contains=@CHATparticipants
+syntax match  CHATcommentsdata /\%(^%\w\+:\s\+\)\@<=.*/
 
 syn keyword CHATunintelligible xxx
-syn match   CHATunintelligible /\<&\w\+\>/ contained
+syn match   CHATunintelligible /\<&\w\+\>/ containedin=CHATmainline
 
 if exists("b:chat_ca")
-	syntax match CHATinterrupt /[⌈⌉⌊⌋]/ contained
-	syntax match CHATpitchmark /[§°·āšʔʕʰΫạἩ„‡⁇⁎↑→↓↗↘↻⇗⇘∆∇∞∫∲∾≈≋≡▁▔◉☺]/ contained
+	syntax match CHATinterrupt /[⌈⌉⌊⌋]/ containedin=CHATmainline
+	syntax match CHATpitchmark /[§°·āšʔʕʰΫạἩ„‡⁇⁎↑→↓↗↘↻⇗⇘∆∇∞∫∲∾≈≋≡▁▔◉☺]/ containedin=CHATmainline
 endif
 
 " dependent tier
 syntax match  CHATdepntier     /^%\w\+:/
-syntax match  CHATdepntierdata /\(^%\(pho\|mod\)\+:\s\+\)\@<=.*/
+syntax match  CHATdepntierdata /\%(^%\%(pho\|mod\)\+:\s\+\)\@<=.*/
 
 " other things
-syntax match CHATpostcode  /\[[^\]]\+\]/          contained
-syntax match CHATtimestamp /[·•][0-9_]\+[·•]/ contained contains=CHATtsbullet
-syntax match CHATtsbullet  /%\w\+:/               contained
-syntax match CHATsep  /|/                         contained
+syntax match CHATpostcode  /\[[^\]]\+\]/          containedin=CHATmainline
+syntax match CHATtimestamp /[·•][0-9_]\+[·•]/ containedin=CHATmainline contains=CHATtsbullet
+syntax match CHATtsbullet  /%\w\+:/               containedin=CHATtimestamp
+syntax match CHATsep  /|/                         containedin=CHATatheader
 
 " errors
 syntax match CHATsyntaxerror        /^[^@*% \t].*/
-syntax match CHATsyntaxerror        /\%^\(@Begin\_$\)\@!\n*.*/
-syntax match CHATsyntaxerror        /.*\n*\(\_^@End\)\@<!\%$/
+syntax match CHATsyntaxerror        /\%^\%(@Begin\_$\)\@!\n*.*/
+syntax match CHATsyntaxerror        /.*\n*\%(\_^@End\)\@<!\%$/
 
 " header lines erroneously inserted within the data
 " this regex is broken: it does not detect header lines after indented lines
@@ -57,13 +57,28 @@ if b:minchat == 0
 	syntax match CHAThiddenheader /^@ColorWords:.*$/
 endif
 
+" primitive semantic highlighting of (up to 16) participant id's
+" adapted from <https://stackoverflow.com/a/21389025>
+if !exists('g:colorParticipants') || g:colorParticipants == 1
+	let colors = ["E64527", "8DB02F", "93651D", "DF8123", "6A6E1E", "CE9F2A", "E07759", "C09772", "A1A257", "B13A27", "D26A2C", "CD9A52", "6C8720", "985332", "77633C", "AEAC32"]
+	for line in readfile(expand("%:p"))
+		let participant = matchstr(line, '@ID:\s\+[^|]*|[^|]*|\zs[^|]\+') " regex match
+		if(!empty(participant))
+			execute 'syn keyword CHATid_' . participant . ' ' . participant
+			execute 'hi default CHATid_' . participant 'guifg=#' . remove(colors, 0) . ' gui=bold'
+			execute 'syn cluster CHATparticipants add=CHATid_' . participant
+		endif
+	endfor
+endif
 
-hi def link CHATatheader     String
-hi def link CHATatheadertag  PreProc
-" hi def link CHATatheader     Comment
-" hi def link CHATatheadertag  Todo
+
+" hi def link CHATatheader     String
+" hi def link CHATatheadertag  PreProc
+hi def link CHATatheader     Comment
+hi def link CHATatheadertag  Todo
 hi def link CHAThiddenheader Comment
 
+hi def link CHATmainlinedata Normal
 hi def link CHATmainlinetag  Statement
 hi def link CHATdepntier     Function
 " hi def link CHATdepntierdata Function

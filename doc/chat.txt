@@ -19,6 +19,11 @@ The full specification for the CHAT format can be found at:
 ==============================================================================
 OPTIONS                                                    *vim-chat-options*
 
+                                                      *'g:colorParticipants'*
+Give each participant ID a unique color, up to 16. Enabled by default. >
+  let g:colorParticipants = 1
+<
+
                                                                 *'b:minchat'*
 Use the minCHAT format, a subset of full CHAT (see spec, §4.1--4.2). >
   let b:minchat = 1
