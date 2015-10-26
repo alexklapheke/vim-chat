@@ -23,7 +23,10 @@ syntax match  CHATmainlinetag  /^\*\w\+:/                           containedin=
 syntax match  CHATcommentsdata /\%(^%\w\+:\s\+\)\@<=.*/
 
 syn keyword CHATunintelligible xxx
-syn match   CHATunintelligible /\<&\w\+\>/ containedin=CHATmainline
+syn match   CHATunintelligible /&\w\+/             containedin=CHATmainlinedata
+syn match   CHATevent          /&=[A-Za-z0-9_:]\+/ containedin=CHATmainlinedata
+syn match   CHATevent          /&[{}]\(\a\)=\w\+/  containedin=CHATmainlinedata
+syn match   CHATpause          /(\.\+)/            containedin=CHATmainlinedata
 
 if exists("b:chat_ca")
 	syntax match CHATinterrupt /[⌈⌉⌊⌋]/ containedin=CHATmainline
@@ -104,7 +107,8 @@ hi def link CHATdepntier          Function
 " hi def link CHATdepntier          Normal
 " hi def link CHATdepntierdata      Normal
 hi def link CHATcommentsdata      Comment
-hi def link CHATunintelligible    String
+hi def link CHATunintelligible    Debug
+hi def link CHATevent             Debug
 hi def link CHATinterrupt         Delimiter
 hi def link CHATpitchmark         Tag
 
