@@ -76,19 +76,22 @@ syntax match CHATchangeableheader /^@Page:.*$/
 syntax match CHATchangeableheader /^@Situation:.*$/
 
 
-" primitive semantic highlighting of (up to 16) participant id's
+" Primitive semantic highlighting of (up to 16) participant id's
 " adapted from <https://stackoverflow.com/a/21389025>
 if !exists('g:colorParticipants') || g:colorParticipants == 1
+	let i = 0
 	let colors = ["E64527", "8DB02F", "93651D", "DF8123", "6A6E1E", "CE9F2A", "E07759", "C09772", "A1A257", "B13A27", "D26A2C", "CD9A52", "6C8720", "985332", "77633C", "AEAC32"]
 	for line in readfile(expand("%:p"))
-		let participant = matchstr(line, '@ID:\s\+[^|]*|[^|]*|\zs[^|]\+') " regex match
+		let participant = matchstr(line, '@ID:\s\+[^|]*|[^|]*|\zs[^|]\+')
 		if(!empty(participant))
 			execute 'syn keyword CHATid_' . participant . ' ' . participant
-			execute 'hi default CHATid_' . participant 'guifg=#' . remove(colors, 0) . ' gui=bold'
 			execute 'syn cluster CHATparticipants add=CHATid_' . participant
+			execute 'hi default CHATid_' . participant . ' guifg=#' . colors[i%len(colors)] . ' gui=bold'
+			let i += 1
 		endif
 	endfor
 else
+	" if semantic highlighting off, we still want these to be colored
 	hi def link CHATmainlinetag Statement
 endif
 
