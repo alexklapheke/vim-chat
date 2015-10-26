@@ -11,14 +11,15 @@ if exists("b:current_syntax")
 endif
 
 syntax case match
+
 " metadata at top of file
-syntax region CHATatheader    start=/^@/ end=/^[*%]\@=/ contains=CHATatheadertag,CHATsep,CHATsyntaxerror
+syntax region CHATatheader    start=/^@/ end=/^[*%]\@=/ contains=CHATatheadertag,CHATsep,CHATsyntaxerror,@CHATparticipants
 syntax match  CHATatheadertag /^@[^:]\+:\?/             contained
 
 " main transcription data
-syntax region CHATmainline     start=/^\*/ end=/\%$/ transparent contains=CHATmainlinetag,CHATmainlinedata,CHATpostcode,CHATtimestamp,CHATsyntaxerror,CHATunintelligible,CHATinterrupt,CHATpitchmark
-syntax match  CHATmainlinedata /\%(^\*\w\+:\|^\s\+\)\@<=[^·•]*/      containedin=CHATmainline
-syntax match  CHATmainlinetag  /^\*\w\+:/                              transparent containedin=CHATmainline contains=@CHATparticipants
+syntax region CHATmainline     start=/^\*/ end=/\%$/ transparent    contains=CHATmainlinetag,CHATmainlinedata,CHATpostcode,CHATtimestamp,CHATsyntaxerror,CHATunintelligible,CHATinterrupt,CHATpitchmark
+syntax match  CHATmainlinedata /\%(^\*\w\+:\|^\s\+\)\@<=[^·•]*/ containedin=CHATmainline
+syntax match  CHATmainlinetag  /^\*\w\+:/                           containedin=CHATmainline contains=@CHATparticipants
 syntax match  CHATcommentsdata /\%(^%\w\+:\s\+\)\@<=.*/
 
 syn keyword CHATunintelligible xxx
@@ -35,7 +36,7 @@ syntax match  CHATdepntierdata /\%(^%\%(pho\|mod\)\+:\s\+\)\@<=.*/
 
 " other things
 syntax match CHATpostcode  /\[[^\]]\+\]/          containedin=CHATmainline
-syntax match CHATtimestamp /[·•][0-9_]\+[·•]/ containedin=CHATmainline contains=CHATtsbullet
+syntax match CHATtimestamp /[·•][0-9_]\+[·•]/ containedin=CHATmainline contains=CHATtsbullet
 syntax match CHATtsbullet  /%\w\+:/               containedin=CHATtimestamp
 syntax match CHATsep  /|/                         containedin=CHATatheader
 
@@ -57,6 +58,21 @@ if b:minchat == 0
 	syntax match CHAThiddenheader /^@ColorWords:.*$/
 endif
 
+" changeable headers
+syntax match CHATchangeableheader /^@Activities:.*$/
+syntax match CHATchangeableheader /^@Bck:.*$/
+syntax match CHATchangeableheader /^@Bg.*$/
+syntax match CHATchangeableheader /^@Blank.*$/
+syntax match CHATchangeableheader /^@Comment:.*$/
+syntax match CHATchangeableheader /^@Date:.*$/
+syntax match CHATchangeableheader /^@Eg.*$/
+syntax match CHATchangeableheader /^@G:.*$/
+syntax match CHATchangeableheader /^@New Episode.*$/
+syntax match CHATchangeableheader /^@New Language:.*$/
+syntax match CHATchangeableheader /^@Page:.*$/
+syntax match CHATchangeableheader /^@Situation:.*$/
+
+
 " primitive semantic highlighting of (up to 16) participant id's
 " adapted from <https://stackoverflow.com/a/21389025>
 if !exists('g:colorParticipants') || g:colorParticipants == 1
@@ -69,33 +85,36 @@ if !exists('g:colorParticipants') || g:colorParticipants == 1
 			execute 'syn cluster CHATparticipants add=CHATid_' . participant
 		endif
 	endfor
+else
+	hi def link CHATmainlinetag Statement
 endif
 
 
-" hi def link CHATatheader     String
-" hi def link CHATatheadertag  PreProc
-hi def link CHATatheader     Comment
-hi def link CHATatheadertag  Todo
-hi def link CHAThiddenheader Comment
+" hi def link CHATatheader          String
+" hi def link CHATatheadertag       PreProc
+hi def link CHATatheader          Comment
+hi def link CHATatheadertag       Todo
+hi def link CHAThiddenheader      Comment
+hi def link CHATchangeableheader  Comment
 
-hi def link CHATmainlinedata Normal
-hi def link CHATmainlinetag  Statement
-hi def link CHATdepntier     Function
-" hi def link CHATdepntierdata Function
-" hi def link CHATdepntier     Normal
-" hi def link CHATdepntierdata Normal
-hi def link CHATcommentsdata   Comment
-hi def link CHATunintelligible String
-hi def link CHATinterrupt      Delimiter
-hi def link CHATpitchmark      Tag
+hi def link CHATmainlinedata      Normal
+" hi def link CHATmainlinetag       Statement " dependent on g:colorParticipants
+hi def link CHATdepntier          Function
+" hi def link CHATdepntierdata      Function
+" hi def link CHATdepntier          Normal
+" hi def link CHATdepntierdata      Normal
+hi def link CHATcommentsdata      Comment
+hi def link CHATunintelligible    String
+hi def link CHATinterrupt         Delimiter
+hi def link CHATpitchmark         Tag
 
-hi def link CHATpostcode     Constant
-hi def link CHATtimestamp    Type
-hi def link CHATtsbullet     Tag
-hi def link CHATsep          Comment
+hi def link CHATpostcode          Constant
+hi def link CHATtimestamp         Type
+hi def link CHATtsbullet          Tag
+hi def link CHATsep               Comment
 
-hi def link CHATsyntaxerror  Error
-hi def link CHATsyntaxerrorheader  Error
+hi def link CHATsyntaxerror       Error
+hi def link CHATsyntaxerrorheader Error
 
 let b:current_syntax = "chat"
 
