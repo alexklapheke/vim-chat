@@ -2,7 +2,7 @@
 " Language: CHAT transcription format
 " Maintainer: Alex Klapheke <alexklapheke@gmail.com>
 " License: GPL v2
-" Updated: 7 Oct 2014
+" Updated: 26 Oct 2015
 " TODO: Implement matchparen-style highlighting for CHATinterrupt brackets
 
 " Don't supersede an already-loaded syntax file
@@ -12,36 +12,37 @@ endif
 
 syntax case match
 
-" metadata at top of file
-syntax region CHATatheader    start=/^@/ end=/^[*%]\@=/ contains=CHATatheadertag,CHATsep,CHATsyntaxerror,@CHATparticipants
-syntax match  CHATatheadertag /^@[^:]\+:\?/             contained
+" tier identifiers
+syntax match  CHATatheadertag /^@[^:]\+:\?/ containedin=CHATatheader
+syntax match  CHATmainlinetag /^\*\w\+:/    containedin=CHATmainline contains=@CHATparticipants
+syntax match  CHATdepntiertag /^%\w\+:/     containedin=CHATdepntier
 
-" main transcription data
-syntax region CHATmainline     start=/^\*/ end=/\%$/ transparent    contains=CHATmainlinetag,CHATmainlinedata,CHATpostcode,CHATtimestamp,CHATsyntaxerror,CHATunintelligible,CHATinterrupt,CHATpitchmark
-syntax match  CHATmainlinedata /\%(^\*\w\+:\|^\s\+\)\@<=[^·•]*/ containedin=CHATmainline
-syntax match  CHATmainlinetag  /^\*\w\+:/                           containedin=CHATmainline contains=@CHATparticipants
-syntax match  CHATcommentsdata /\%(^%\w\+:\s\+\)\@<=.*/
+" the rest of the data on the tier
+syntax match  CHATmainlinedata /\%(^\*\w\+:\|^\s\+\)\@<=.*/ containedin=CHATmainline
+syntax match  CHATdepntierdata /\%(^%\w\+:\|^\s\+\)\@<=.*/  containedin=CHATdepntier
 
-syn keyword CHATunintelligible xxx
-syn match   CHATunintelligible /&\w\+/             containedin=CHATmainlinedata
-syn match   CHATevent          /&=[A-Za-z0-9_:]\+/ containedin=CHATmainlinedata
-syn match   CHATevent          /&[{}]\(\a\)=\w\+/  containedin=CHATmainlinedata
-syn match   CHATpause          /(\.\+)/            containedin=CHATmainlinedata
+" encapsulations of multiline tiers
+syntax region CHATatheader start=/^@/  end=/^[*%]\@=/              keepend contains=CHATatheadertag,CHATsep,CHATsyntaxerror,@CHATparticipants
+syntax region CHATmainline start=/^\*/ end=/^[*%@]\@=/ transparent keepend contains=CHATmainlinetag,CHATmainlinedataCHATpostcode,CHATtimestamp,CHATsyntaxerror,CHATunintelligible,CHATinterrupt,CHATpitchmark
+syntax region CHATdepntier start=/^%/  end=/^[*%@]\@=/ transparent keepend contains=CHATdepntiertag,CHATdepntierdata
+
+" various transcript markings
+syntax keyword CHATunintelligible xxx                      containedin=CHATmainlinedata
+syntax match CHATunintelligible /&\w\+/                    containedin=CHATmainlinedata
+syntax match CHATevent          /&=[A-Za-z0-9_:]\+/        containedin=CHATmainlinedata
+syntax match CHATevent          /&[{}]\(\a\)=\w\+/         containedin=CHATmainlinedata
+syntax match CHATpause          /(\.\+)/                   containedin=CHATmainlinedata
+syntax match CHATpostcode       /\[[^\]]\+\]/              containedin=CHATmainlinedata
+syntax match CHATlinecomment    /\[%[^\]]\+\]/             containedin=CHATmainlinedata
+syntax match CHATtimestamp      /[·•][0-9_]\+[·•]/ containedin=CHATmainlinedata
 
 if exists("b:chat_ca")
-	syntax match CHATinterrupt /[⌈⌉⌊⌋]/ containedin=CHATmainline
-	syntax match CHATpitchmark /[§°·āšʔʕʰΫạἩ„‡⁇⁎↑→↓↗↘↻⇗⇘∆∇∞∫∲∾≈≋≡▁▔◉☺]/ containedin=CHATmainline
+	syntax match CHATinterrupt /[⌈⌉⌊⌋]/                                 containedin=CHATmainlinedata
+	syntax match CHATpitchmark /[§°·āšʔʕʰΫạἩ„‡⁇⁎↑→↓↗↘↻⇗⇘∆∇∞∫∲∾≈≋≡▁▔◉☺]/ containedin=CHATmainlinedata
 endif
 
-" dependent tier
-syntax match  CHATdepntier     /^%\w\+:/
-syntax match  CHATdepntierdata /\%(^%\%(pho\|mod\)\+:\s\+\)\@<=.*/
-
-" other things
-syntax match CHATpostcode  /\[[^\]]\+\]/          containedin=CHATmainline
-syntax match CHATtimestamp /[·•][0-9_]\+[·•]/ containedin=CHATmainline contains=CHATtsbullet
-syntax match CHATtsbullet  /%\w\+:/               containedin=CHATtimestamp
-syntax match CHATsep  /|/                         containedin=CHATatheader
+" header separator
+syntax match CHATsep /|/ containedin=CHATatheader
 
 " errors
 syntax match CHATsyntaxerror        /^[^@*% \t].*/
@@ -52,7 +53,6 @@ syntax match CHATsyntaxerror        /.*\n*\%(\_^@End\)\@<!\%$/
 " this regex is broken: it does not detect header lines after indented lines
 syntax match CHATsyntaxerrorheader  /\%(\_^[*%].*\n\%(\_^\s.*\n\)*\)\@<=\_^@.*\%(\n\%(\_^\s.*\n\)*\_^[*%].*\)\@=/
 
-
 " hidden headers
 if b:minchat == 0
 	syntax match CHAThiddenheader /^@Font:.*$/
@@ -61,7 +61,7 @@ if b:minchat == 0
 	syntax match CHAThiddenheader /^@ColorWords:.*$/
 endif
 
-" changeable headers
+" changeable headers (allowable within data; must supersede CHATsyntaxerrorheader)
 syntax match CHATchangeableheader /^@Activities:.*$/
 syntax match CHATchangeableheader /^@Bck:.*$/
 syntax match CHATchangeableheader /^@Bg.*$/
@@ -76,18 +76,18 @@ syntax match CHATchangeableheader /^@Page:.*$/
 syntax match CHATchangeableheader /^@Situation:.*$/
 
 
-" Primitive semantic highlighting of (up to 16) participant id's
+" Primitive semantic highlighting of participant IDs
 " adapted from <https://stackoverflow.com/a/21389025>
 if !exists('g:colorParticipants') || g:colorParticipants == 1
-	let i = 0
-	let colors = ["E64527", "8DB02F", "93651D", "DF8123", "6A6E1E", "CE9F2A", "E07759", "C09772", "A1A257", "B13A27", "D26A2C", "CD9A52", "6C8720", "985332", "77633C", "AEAC32"]
-	for line in readfile(expand("%:p"))
-		let participant = matchstr(line, '@ID:\s\+[^|]*|[^|]*|\zs[^|]\+')
-		if(!empty(participant))
-			execute 'syn keyword CHATid_' . participant . ' ' . participant
-			execute 'syn cluster CHATparticipants add=CHATid_' . participant
-			execute 'hi default CHATid_' . participant . ' guifg=#' . colors[i%len(colors)] . ' gui=bold'
-			let i += 1
+	let s:i = 0
+	let s:colors = ["E64527", "8DB02F", "93651D", "DF8123", "6A6E1E", "CE9F2A", "E07759", "C09772", "A1A257", "B13A27", "D26A2C", "CD9A52", "6C8720", "985332", "77633C", "AEAC32"]
+	for s:line in readfile(expand("%:p"))
+		let s:participant = matchstr(s:line, '@ID:\s\+[^|]*|[^|]*|\zs[^|]\+')
+		if(!empty(s:participant))
+			execute 'syn keyword CHATid_' . s:participant . ' ' . s:participant
+			execute 'syn cluster CHATparticipants add=CHATid_' . s:participant
+			execute 'hi default CHATid_' . s:participant . ' ctermfg=' . string(s:i%len(s:colors)) . ' guifg=#' . s:colors[s:i%len(s:colors)] . ' cterm=bold gui=bold'
+			let s:i += 1
 		endif
 	endfor
 else
@@ -96,32 +96,29 @@ else
 endif
 
 
-" hi def link CHATatheader          String
-" hi def link CHATatheadertag       PreProc
+" headers
 hi def link CHATatheader          Comment
 hi def link CHATatheadertag       Todo
 hi def link CHAThiddenheader      Comment
 hi def link CHATchangeableheader  Comment
+hi def link CHATsep               Comment
 
-hi def link CHATmainlinedata      Normal
-" hi def link CHATmainlinetag       Statement " dependent on g:colorParticipants
-hi def link CHATdepntier          Function
-" hi def link CHATdepntierdata      Function
-" hi def link CHATdepntier          Normal
-" hi def link CHATdepntierdata      Normal
-hi def link CHATcommentsdata      Comment
+" dependent tiers
+hi def link CHATdepntiertag       Comment
+hi def link CHATdepntierdata      Comment
+hi def link CHATlinecomment       Comment
+
+" main tiers
 hi def link CHATunintelligible    Debug
 hi def link CHATevent             Debug
 hi def link CHATinterrupt         Delimiter
 hi def link CHATpitchmark         Tag
-
 hi def link CHATpostcode          Constant
 hi def link CHATtimestamp         Type
-hi def link CHATtsbullet          Tag
-hi def link CHATsep               Comment
 
-hi def link CHATsyntaxerror       Error
+" errors
 hi def link CHATsyntaxerrorheader Error
+hi def link CHATsyntaxerror       Error
 
 let b:current_syntax = "chat"
 
