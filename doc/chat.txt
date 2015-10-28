@@ -20,7 +20,9 @@ The full specification for the CHAT format can be found at:
 OPTIONS                                                    *vim-chat-options*
 
                                                       *'g:colorParticipants'*
-Give each participant ID a unique color, up to 16. Enabled by default. >
+Give each participant ID a unique color, up to 16. Enabled by default.
+Colors are assigned when highlighting is applied, and not cached, so
+they may change if the file is reloaded. >
   let g:colorParticipants = 1
 <
 

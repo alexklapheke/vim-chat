@@ -81,7 +81,7 @@ syntax match CHATchangeableheader /^@Situation:.*$/
 if !exists('g:colorParticipants') || g:colorParticipants == 1
 	let s:i = 0
 	let s:colors = ["E64527", "8DB02F", "93651D", "DF8123", "6A6E1E", "CE9F2A", "E07759", "C09772", "A1A257", "B13A27", "D26A2C", "CD9A52", "6C8720", "985332", "77633C", "AEAC32"]
-	for s:line in readfile(expand("%:p"))
+	for s:line in getline('1','$')
 		let s:participant = matchstr(s:line, '@ID:\s\+[^|]*|[^|]*|\zs[^|]\+')
 		if(!empty(s:participant))
 			execute 'syn keyword CHATid_' . s:participant . ' ' . s:participant
