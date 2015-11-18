@@ -27,18 +27,18 @@ syntax region CHATmainline start=/^\*/ end=/^[*%@]\@=/ transparent keepend conta
 syntax region CHATdepntier start=/^%/  end=/^[*%@]\@=/ transparent keepend contains=CHATdepntiertag,CHATdepntierdata
 
 " various transcript markings
-syntax keyword CHATunintelligible xxx                      containedin=CHATmainlinedata
-syntax match CHATunintelligible /&\w\+/                    containedin=CHATmainlinedata
-syntax match CHATevent          /&=[A-Za-z0-9_:]\+/        containedin=CHATmainlinedata
-syntax match CHATevent          /&[{}]\(\a\)=\w\+/         containedin=CHATmainlinedata
-syntax match CHATpause          /(\.\+)/                   containedin=CHATmainlinedata
-syntax match CHATpostcode       /\[[^\]]\+\]/              containedin=CHATmainlinedata
-syntax match CHATlinecomment    /\[%[^\]]\+\]/             containedin=CHATmainlinedata
-syntax match CHATtimestamp      /[·•][0-9_]\+[·•]/ containedin=CHATmainlinedata
+syntax region  CHATtimestamp      start=/[·•]/ end=/[·•]/ containedin=CHATmainlinedata conceal cchar=·
+syntax keyword CHATunintelligible xxx yyy www             containedin=CHATmainlinedata
+syntax match   CHATunintelligible /&\w\+/                 containedin=CHATmainlinedata
+syntax match   CHATevent          /&=[A-Za-z0-9_:]\+/     containedin=CHATmainlinedata
+syntax match   CHATevent          /&[{}]\(\a\)=\w\+/      containedin=CHATmainlinedata
+syntax match   CHATpause          /(\.\+)/                containedin=CHATmainlinedata
+syntax match   CHATpostcode       /\[[^\]]\+\]/           containedin=CHATmainlinedata
+syntax match   CHATlinecomment    /\[%[^\]]\+\]/          containedin=CHATmainlinedata
 
 if exists("b:chat_ca")
-	syntax match CHATinterrupt /[⌈⌉⌊⌋]/                                 containedin=CHATmainlinedata
-	syntax match CHATpitchmark /[§°·āšʔʕʰΫạἩ„‡⁇⁎↑→↓↗↘↻⇗⇘∆∇∞∫∲∾≈≋≡▁▔◉☺]/ containedin=CHATmainlinedata
+	syntax match CHATinterrupt /[⌈⌉⌊⌋]/                                containedin=CHATmainlinedata
+	syntax match CHATpitchmark /[§°āšʔʕʰΫạἩ„‡⁇⁎↑→↓↗↘↻⇗⇘∆∇∞∫∲∾≈≋≡▁▔◉☺]/ containedin=CHATmainlinedata
 endif
 
 " header separator
