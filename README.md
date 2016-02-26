@@ -4,13 +4,19 @@ This is a vim syntax file for the [CHAT transcription format](http://childes.psy
 
 This is very much a work in progress, as I slowly work my way through the [spec](http://childes.psy.cmu.edu/manuals/chat.pdf) and through corpus data.
 
-# Installation
+## Features
 
-## Pathogen
+Vim-chat features semantic highlighting of participants: each participant gets a unique color, up to 16. The following colors are built in, and work well with the handful of color schemes I've tested.
+
+![](http://i.imgur.com/D0V6PN4.png)
+
+## Installation
+
+### Pathogen
 
 Just `git clone git://github.com/klapheke/vim-chat.git ~/.vim/bundle/vim-chat/`
 
-## Vundle
+### Vundle
 
 Add the following to your .vimrc:
 
@@ -19,8 +25,7 @@ Add the following to your .vimrc:
 Plugin 'klapheke/vim-chat'
 ```
 
-# References
+## References
 
 MacWhinney, B. (2000). *The CHILDES Project: Tools for Analyzing Talk*. 3<sup>rd</sup> Edition. Mahwah, NJ: Lawrence Erlbaum Associates
-
 
