@@ -29,4 +29,3 @@ Plugin 'klapheke/vim-chat'
 
 MacWhinney, B. (2000). *The CHILDES Project: Tools for Analyzing Talk*. 3<sup>rd</sup> Edition. Mahwah, NJ: Lawrence Erlbaum Associates
 
-
