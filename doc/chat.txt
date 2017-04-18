@@ -7,7 +7,7 @@ License:    GPL v2
 The current version of this plugin can be found at:
 <http://github.com/klapheke/vim-chat>
 
-===============================================================================
+==============================================================================
 ABOUT                                                        *vim-chat-about*
 
 This is a vim syntax file for the CHAT transcription format, which is used in
@@ -22,7 +22,8 @@ OPTIONS                                                    *vim-chat-options*
                                                       *'g:colorParticipants'*
 Give each participant ID a unique color, up to 16. Enabled by default.
 Colors are assigned when highlighting is applied, and not cached, so
-they may change if the file is reloaded. >
+they may change if the file is reloaded. To refresh colors, it should
+suffice to run `:setf chat`. >
   let g:colorParticipants = 1
 <
 
@@ -35,6 +36,12 @@ Use the minCHAT format, a subset of full CHAT (see spec, §4.1--4.2). >
 Use the CHAT-CA format, based on the system proposed by Sacks, Schegloff, &
 Jefferson (1974, doi:10.2307/412243). >
   let b:chat_ca = 1
+<
+
+                                                               *'b:berkeley'*
+Use the Berkeley Transcription System for sign language transcription
+(Slobin et al. 2001, doi:10.1075/sll.4.12.07slo). >
+  let b:berkeley = 1
 <
 
 ==============================================================================

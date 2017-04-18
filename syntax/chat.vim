@@ -27,7 +27,7 @@ syntax region CHATmainline start=/^\*/ end=/^[*%@]\@=/ transparent keepend conta
 syntax region CHATdepntier start=/^%/  end=/^[*%@]\@=/ transparent keepend contains=CHATdepntiertag,CHATdepntierdata
 
 " various transcript markings
-syntax region  CHATtimestamp      start=/[·•]/ end=/[·•]/ containedin=CHATmainlinedata conceal cchar=·
+syntax region  CHATtimestamp      start=/[·•]/ end=/[·•]/ containedin=CHATmainlinedata conceal cchar=·
 syntax keyword CHATunintelligible xxx yyy www             containedin=CHATmainlinedata
 syntax match   CHATunintelligible /&\w\+/                 containedin=CHATmainlinedata
 syntax match   CHATevent          /&=[A-Za-z0-9_:]\+/     containedin=CHATmainlinedata
@@ -35,19 +35,28 @@ syntax match   CHATevent          /&[{}]\(\a\)=\w\+/      containedin=CHATmainli
 syntax match   CHATpause          /(\.\+)/                containedin=CHATmainlinedata
 syntax match   CHATpostcode       /\[[^\]]\+\]/           containedin=CHATmainlinedata
 syntax match   CHATlinecomment    /\[%[^\]]\+\]/          containedin=CHATmainlinedata
+syntax match   CHATreplacement    /\[:[^\]]\+\]/          containedin=CHATmainlinedata
+syntax match   CHATreplacement    /\[=?[^\]]\+\]/         containedin=CHATmainlinedata
 
-if exists("b:chat_ca")
+if b:chat_ca
 	syntax match CHATinterrupt /[⌈⌉⌊⌋]/                                containedin=CHATmainlinedata
 	syntax match CHATpitchmark /[§°āšʔʕʰΫạἩ„‡⁇⁎↑→↓↗↘↻⇗⇘∆∇∞∫∲∾≈≋≡▁▔◉☺]/ containedin=CHATmainlinedata
+endif
+
+if b:berkeley
+	syntax match CHATpause /\#/           containedin=CHATmainlinedata
+	syntax match CHATevent /\<PNT_\S\+\>/ containedin=CHATmainlinedata
+	syntax match CHATevent /\<\w@ag\>/    containedin=CHATmainlinedata
+	syntax match CHATerror /\[\*\w\?\]/   containedin=CHATmainlinedata
 endif
 
 " header separator
 syntax match CHATsep /|/ containedin=CHATatheader
 
 " errors
-syntax match CHATsyntaxerror        /^[^@*% \t].*/
-syntax match CHATsyntaxerror        /\%^\%(@Begin\_$\)\@!\n*.*/
-syntax match CHATsyntaxerror        /.*\n*\%(\_^@End\)\@<!\%$/
+syntax match CHATsyntaxerror        /^[^@*% \t].*/              " lines that don't start with @, *, or %
+syntax match CHATsyntaxerror        /\%^\%(@Begin\_$\)\@!\n*.*/ " anything before @Begin
+syntax match CHATsyntaxerror        /.*\n*\%(\_^@End\)\@<!\%$/  " anything after @End
 
 " header lines erroneously inserted within the data
 " this regex is broken: it does not detect header lines after indented lines
@@ -78,7 +87,7 @@ syntax match CHATchangeableheader /^@Situation:.*$/
 
 " Primitive semantic highlighting of participant IDs
 " adapted from <https://stackoverflow.com/a/21389025>
-if !exists('g:colorParticipants') || g:colorParticipants == 1
+if g:colorParticipants
 	let s:i = 0
 	let s:colors = ["E64527", "8DB02F", "93651D", "DF8123", "6A6E1E", "CE9F2A", "E07759", "C09772", "A1A257", "B13A27", "D26A2C", "CD9A52", "6C8720", "985332", "77633C", "AEAC32"]
 	for s:line in getline('1','$')
@@ -111,10 +120,12 @@ hi def link CHATlinecomment       Comment
 " main tiers
 hi def link CHATunintelligible    Debug
 hi def link CHATevent             Debug
+hi def link CHATerror             Debug
 hi def link CHATinterrupt         Delimiter
 hi def link CHATpitchmark         Tag
 hi def link CHATpostcode          Constant
 hi def link CHATtimestamp         Type
+hi def link CHATreplacement       Comment
 
 " errors
 hi def link CHATsyntaxerrorheader Error
